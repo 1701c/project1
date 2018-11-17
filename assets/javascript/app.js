@@ -4,7 +4,8 @@ var app = {
     var queryURL = 'https://api.themoviedb.org/3/search/';
     var type = 'movie';
     var additionalParams = '&include_adult=false&language=en-US&page=1';
-    
+    var results = [];
+
     if (isTV === true){
       type = 'tv';
       // additionalParams = '';
@@ -13,8 +14,26 @@ var app = {
       url: queryURL + type + '?api_key=' + key + '&query=' + searchText + additionalParams,
       method: 'GET'
     }).done(function (response) {
-      console.log(response);
+      // console.log(response);
+      app.drawBoxes(response);
     });
+  },
+
+  drawBoxes: function (response) {
+    // console.log(response.results);
+    // console.log('drawBoxes');
+    for (i = 0; i < response.results.length; i++) {
+      var box = $('<div>');
+      box.append('<img src="http://image.tmdb.org/t/p/w185//' + response.results[i].poster_path + '">')
+      $("#results").append(box);
+      console.log('loop')
+
+
+
+      // console.log(response.results[i].original_title);
+      // box.append('')
+    }
+    console.log('end');
   },
 
   searchUtelly: function (searchText) {
@@ -23,6 +42,7 @@ var app = {
     // console.log(value);
 
     // var searchedText = value.replace(/\s/g, "+");
+    
     var searchedText = searchText.replace(/\s/g, "+");
 
 
@@ -60,8 +80,8 @@ var app = {
 
 $(document).ready(function () {
   console.log('init');
-  $("#searchEnter").click(function(e) {
+  $("#submitBtn").click(function(e) {
       e.preventDefault();
-      app.searchUtelly();
+      app.searchMovieDB();
     });
   });

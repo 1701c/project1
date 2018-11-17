@@ -36,7 +36,7 @@
     <div class="columns is-mobile is-centered">
       <div class="column is-two-thirds">
         <h2>What do you want to watch?</h2>
-        <input class="input" type="text" placeholder="Text input">
+        <input class="input" type="text" id="searchText" placeholder="Text input">
 
         <label class="checkbox">
             <input type="checkbox">
@@ -48,8 +48,7 @@
             </label>
 
             <div class="control">
-          <button class="button">GO!</button>
-
+          <button class="button" id="submitBtn">GO!</button>
         </div>
       </div>
     </div>
@@ -67,7 +66,7 @@
         <!--Logo will go here, if time-->
       </div>
     </section>
-    <div class="results">
+    <div id="results">
       <!--Results will go here-->
     </div>
   </div>
