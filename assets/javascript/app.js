@@ -69,9 +69,9 @@ var app = {
         "Accept": "application/json"
       },
       dataType : "json",
-      success : function(newJson) {
-        console.log(newJson);
-        $('#results').append()
+      success : function(results) {
+        console.log(results);
+        $('#results').append('<img src="' + results.results[0].picture + '">')
           // app.searchResults(newJson);
       }
     });
