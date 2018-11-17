@@ -23,7 +23,8 @@ var app = {
     console.log(response.results);
     // console.log('drawBoxes');
     for (i = 0; i < response.results.length; i++) {
-      var box = $('<div class="thumbNail">');
+      var box = $('<div>');
+      box.addClass('thumbNail');
       box.append('<img src="http://image.tmdb.org/t/p/w185//' + response.results[i].poster_path + '">')
       .append('<p>' + response.results[i].title + '</p>')
       .append('<p>' + response.results[i].release_date + '</p>')
