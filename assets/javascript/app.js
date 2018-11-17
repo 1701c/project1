@@ -20,18 +20,17 @@ var app = {
   },
 
   drawBoxes: function (response) {
-    // console.log(response.results);
+    console.log(response.results);
     // console.log('drawBoxes');
     for (i = 0; i < response.results.length; i++) {
       var box = $('<div>');
+      box.addClass('thumbNail');
       box.append('<img src="http://image.tmdb.org/t/p/w185//' + response.results[i].poster_path + '">')
+      .append('<p>' + response.results[i].title + '</p>')
+      .append('<p>' + response.results[i].release_date + '</p>')
       $("#results").append(box);
       console.log('loop')
 
-
-
-      // console.log(response.results[i].original_title);
-      // box.append('')
     }
     console.log('end');
   },
@@ -82,6 +81,6 @@ $(document).ready(function () {
   console.log('init');
   $("#submitBtn").click(function(e) {
       e.preventDefault();
-      app.searchMovieDB();
+      app.searchMovieDB($("#searchText").val());
     });
   });
