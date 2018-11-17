@@ -24,51 +24,35 @@
       </div>
     </div>
   </section>
-  <div class="container is-fluid">
+  <!-- <div class="container is-fluid">
     <section class="section">
       <div class="container">
         <h1 class="subtitle">What's Treading?</h1>
         <div id="trending-section"></div>
-        <!-- Entry field for trending content -->
       </div>
-    </section>
+    </section> -->
+  <br>
+  <div class="columns is-mobile is-centered">
+    <div class="column is-two-thirds">
+      <h2>What do you want to watch?</h2>
+      <input class="input" type="text" id="searchText" placeholder="Text input">
 
-    <div class="columns is-mobile is-centered">
-      <div class="column is-two-thirds">
-        <h2>What do you want to watch?</h2>
-        <input class="input" type="text" id="searchText" placeholder="Text input">
+      <label class="checkbox">
+        <input type="checkbox">
+        Movies
+      </label>
+      <label class="checkbox">
+        <input type="checkbox">
+        TV Shows
+      </label>
 
-        <label class="checkbox">
-            <input type="checkbox">
-            Movies
-          </label>
-          <label class="checkbox">
-              <input type="checkbox">
-              TV Shows
-            </label>
-
-            <div class="control">
-          <button class="button" id="submitBtn">GO!</button>
-        </div>
+      <div class="control">
+        <button class="button" id="submitBtn">GO!</button>
       </div>
     </div>
-
-    <section class="section">
-      <div class="container">
-        <h1 class="subtitle">Watch List</h1>
-        <div id="watchlist-section"></div>
-        <!-- Entry field for watch List content -->
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="container">
-        <!--Logo will go here, if time-->
-      </div>
-    </section>
-    <div id="results">
-      <!--Results will go here-->
-    </div>
+  </div>
+  </div>
+  <div id="results"></div>
   </div>
 </body>
 

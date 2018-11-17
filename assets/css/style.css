@@ -5,13 +5,15 @@ html{
 
 body {
     background-color: #3c4146;
+    color: #fff;
    
 }
 
 .hero-body {
     background-image: linear-gradient(to bottom, #050505, #e2e2e286);
     border-bottom: #000 solid 2px;
-    border-top: #000 solid 2px; 
+    border-top: #000 solid 2px;
+    padding: 1rem 1.5rem;
 }
 
 .title {
@@ -46,6 +48,10 @@ body {
 
 .control {
     margin-top: 1%;
+}
+
+.thumbnail {
+
 }
 
 h1 {
