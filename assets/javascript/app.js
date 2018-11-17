@@ -1,3 +1,5 @@
+var movieDbArray = [];
+
 var app = {
   searchMovieDB: function (searchText, isTV) {
     var key = '8db22003a978a1dbb48400e1d0ef0fa7';
@@ -21,31 +23,44 @@ var app = {
 
   drawBoxes: function (response) {
     console.log(response.results);
-    // console.log('drawBoxes');
+    movieDbArray = response.results;
     for (i = 0; i < response.results.length; i++) {
       var box = $('<div>');
-      box.addClass('thumbNail');
-      box.append('<img src="http://image.tmdb.org/t/p/w185//' + response.results[i].poster_path + '">')
+      box.addClass('thumbNail')
+      .attr('dataIndex', i)
+      .append('<img src="http://image.tmdb.org/t/p/w185//' + response.results[i].poster_path + '">')
       .append('<p>' + response.results[i].title + '</p>')
       .append('<p>' + response.results[i].release_date + '</p>')
       $("#results").append(box);
       console.log('loop')
-
     }
     console.log('end');
   },
 
-  searchUtelly: function (searchText) {
+  movieSummary: function (i) {
+    $('#results').empty()
+
+    .append('<img src="http://image.tmdb.org/t/p/w185//' + movieDbArray[i].poster_path + '">')
+    var list = $('<ul>');
+    list.append('<li>' + movieDbArray[i].original_title + '</li>')
+    .append('<li>' + movieDbArray[i].overview + '</li>')
+    .append('<li>' + movieDbArray[i].popularity + '</li>')
+    .append('<li>' + movieDbArray[i].release_date + '</li>')
+    .append('<li>' + movieDbArray[i].vote_average + '</li>')
+    .append('<li>' + movieDbArray[i].vote_count + '</li>')
+    $('#results').append(list)
+    app.searchUtelly(i)
+
+    console.log(i);
+  },
+
+  searchUtelly: function (i) {
     
-    // var value = $("#searchText").val();
-    // console.log(value);
 
     // var searchedText = value.replace(/\s/g, "+");
     
-    var searchedText = searchText.replace(/\s/g, "+");
-
-
-    var utellyurl= "https://utelly-tv-shows-and-movies-availability-v1.p.mashape.com/lookup?country=us&term=" + searchedText;
+    var searchText = movieDbArray[i].original_title.replace(/\s/g, "+");
+    var utellyurl= "https://utelly-tv-shows-and-movies-availability-v1.p.mashape.com/lookup?country=us&term=" + searchText;
     
     $.ajax({
       url : utellyurl,
@@ -56,6 +71,7 @@ var app = {
       dataType : "json",
       success : function(newJson) {
         console.log(newJson);
+        $('#results').append()
           // app.searchResults(newJson);
       }
     });
@@ -83,4 +99,10 @@ $(document).ready(function () {
       e.preventDefault();
       app.searchMovieDB($("#searchText").val());
     });
+  });
+
+  $(document).on('click', '.thumbNail', function () {
+    console.log('click');
+    app.movieSummary($(this).attr('dataIndex'))
+    // app.searchUtelly($(this).attr('mName'),$(this).attr('mYame'));
   });
