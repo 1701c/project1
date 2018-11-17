@@ -1,7 +1,4 @@
-var queryURL = 'https://api.giphy.com/v1/gifs/search?api_key=dc6zaTOxFJmzC';
-
 var app = {
-  
   searchMovieDB: function (searchText, isTV) {
     var key = '8db22003a978a1dbb48400e1d0ef0fa7';
     var queryURL = 'https://api.themoviedb.org/3/search/';
@@ -9,10 +6,9 @@ var app = {
     var additionalParams = '&include_adult=false&language=en-US&page=1';
     
     if (isTV === true){
-      type = 'tv'
+      type = 'tv';
       // additionalParams = '';
-    }
-    
+    } 
     $.ajax({
       url: queryURL + type + '?api_key=' + key + '&query=' + searchText + additionalParams,
       method: 'GET'
@@ -20,8 +16,52 @@ var app = {
       console.log(response);
     });
   },
+
+  searchUtelly: function (searchText) {
+    
+    // var value = $("#searchText").val();
+    // console.log(value);
+
+    // var searchedText = value.replace(/\s/g, "+");
+    var searchedText = searchText.replace(/\s/g, "+");
+
+
+    var utellyurl= "https://utelly-tv-shows-and-movies-availability-v1.p.mashape.com/lookup?country=us&term=" + searchedText;
+    
+    $.ajax({
+      url : utellyurl,
+      headers : {
+        "X-Mashape-Key": "KPBprgn6TVmshqAVU5TA1nFdq6xUp1fEvamjsnwBYoPqRIaL3Q",
+        "Accept": "application/json"
+      },
+      dataType : "json",
+      success : function(newJson) {
+        console.log(newJson);
+          // app.searchResults(newJson);
+      }
+    });
+  },
+
+  searchResults: function(json) {
+    var results = "";
+
+    console.log(results);
+
+    //Loop through search results  
+    for (var j=0; j < json.results[i].locations.length; j++) {
+        console.log(json.results[i].locations[j].url);
+        var location_url = json.results[i].locations[j].url;
+        results += '<a href="' + location_url + '">';
+        results += '<img src="' + json.results[i].locations[j].icon + '" />';
+        results += '</a>';
+        }  
+    }
 }
 
 $(document).ready(function () {
   console.log('init');
+  $("#searchEnter").click(function(e) {
+      e.preventDefault();
+      app.searchUtelly();
+    });
   });
