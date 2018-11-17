@@ -1,0 +1,63 @@
+
+html{
+    background-color: transparent;
+}
+
+body {
+    background-color: #3c4146;
+   
+}
+
+.hero-body {
+    background-image: linear-gradient(to bottom, #050505, #e2e2e286);
+    border-bottom: #000 solid 2px;
+    border-top: #000 solid 2px; 
+}
+
+.title {
+    color: #FECC0C;
+    text-shadow: 2px 2px #000;
+}
+
+.subtitle {
+    color: #FECC0C;
+}
+
+.column {
+    background-color: #3c4146;
+    widows: 50%;
+}
+
+.input {
+    border-color: none;
+    background-color: #ffffff;
+    color: #000;
+}
+
+.checkbox {
+    color: #fff;
+    margin-top: 1.5%;
+}
+
+.button {
+    background-color: #ffa500;
+    color: #000;
+    font-weight: bold;
+}
+
+.control {
+    margin-top: 1%;
+}
+
+h1 {
+    background-color: transparent;
+    text-align: center;
+    font-family: Georgia, 'Times New Roman', Times, serif ;
+}
+
+h2 {
+    color: #fff;
+    padding-bottom: 1%;
+    font-size: 18px;
+}
+
