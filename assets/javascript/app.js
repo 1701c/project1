@@ -1,3 +1,23 @@
+// Initialize Firebase
+var config = {
+  apiKey: "AIzaSyAOPqOfuiDFoo_BVc7nHtcB7x0DbDtIGUc",
+  authDomain: "c-group-project-1.firebaseapp.com",
+  databaseURL: "https://c-group-project-1.firebaseio.com",
+  projectId: "c-group-project-1",
+  storageBucket: "",
+  messagingSenderId: "479131120752"
+};
+firebase.initializeApp(config);
+
+var database = firebase.database();
+
+// test code to verify database functionality
+
+database.ref().set({
+  LastQuery: "Test",
+  User: "Major Tom"
+});
+
 var queryURL = 'https://api.giphy.com/v1/gifs/search?api_key=dc6zaTOxFJmzC';
 
 var app = {
@@ -24,4 +44,5 @@ var app = {
 
 $(document).ready(function () {
   console.log('init');
+  console.log(database);
   });
