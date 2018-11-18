@@ -27,6 +27,7 @@ body {
 
 .column {
     background-color: #3c4146;
+    margin-top: 3%;
 }
 
 .input {
@@ -35,23 +36,33 @@ body {
     color: #000;
 }
 
-.checkbox {
+.checkbox:hover {
     color: #fff;
-    margin-top: 1.5%;
 }
 
 .button {
     background-color: #ffa500;
     color: #000;
     font-weight: bold;
+    border: none;
 }
 
-.control {
-    margin-top: 1%;
+.button.is-info {
+    background-color: #ffa500;
+    border-color: transparent;
+    color: #000;
 }
 
-.thumbnail {
+img {
+    max-width: 25%;
+}
 
+#trendingBtn {
+    margin:5%
+}
+
+#watchListBtn {
+    margin:5%
 }
 
 h1 {
@@ -63,6 +74,6 @@ h1 {
 h2 {
     color: #fff;
     padding-bottom: 1%;
-    font-size: 18px;
+    font-size: 15px;
 }
 
