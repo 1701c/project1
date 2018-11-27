@@ -8,6 +8,17 @@ body {
     color: #fff;
 }
 
+.card {
+    background-color: transparent;
+    color: #fff;
+    padding: 0px;
+    /* width: 185px; */
+}
+
+.card-content {
+    padding: 0px 5px;
+}
+
 .hero-body {
     background-image: linear-gradient(to bottom, #050505, #e2e2e286);
     border-bottom: #000 solid 2px;
@@ -53,7 +64,8 @@ body {
 }
 
 .thumbNail {
-
+    display: inline-block;
+    margin: 10px;
 }
 
 #trendingBtn {
@@ -76,3 +88,17 @@ h2 {
     font-size: 15px;
 }
 
+#results {
+    max-width: 900px;
+    margin: auto;
+}
+
+@media (max-width: 667px) {
+    p {
+        font-size: 12px;
+    }
+    
+    .posterImg {
+        width: 150px;
+    }
+}
