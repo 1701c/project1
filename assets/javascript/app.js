@@ -84,33 +84,35 @@ var app = {
 
 
         drawBoxes: function (response) {
-          movieDbArray = response.results;
+            movieDbArray = response.results;
             for (i = 0; i < response.results.length; i++) {
-                var box = $('<div>');
-                box.addClass('thumbNail')
-                    .attr('dataIndex', i)
-                    .append('<img src="http://image.tmdb.org/t/p/w185//' + response.results[i].poster_path + '">')
-                    .append('<p>' + response.results[i].original_title + '</p>')
-                    .append('<p>' + response.results[i].release_date + '</p>');
-
-                $("#results").append(box);
+            var card = $('<div class="thumbNail card">')
+            var poster = $('<div class="card-image">') 
+            var content = $('<div class="card-content">')           
+            poster.append('<img src="http://image.tmdb.org/t/p/w185//' + response.results[i].poster_path + '">')
+                .addClass('posterImg')
+            content.append('<p>' + response.results[i].original_title + ' (' + response.results[i].release_date.substring(0,4) + ')');
+            card.attr('dataIndex', i)
+                .append(poster)
+                .append(content)
+            $("#results").append(card);
             }
         },
 
         movieSummary: function (i) {
-          $('#results').empty()
+            $('#results').empty()
 
-          .append('<img src="http://image.tmdb.org/t/p/w185//' + movieDbArray[i].poster_path + '">');
-          var list = $('<ul>');
-          list.append('<li>' + movieDbArray[i].original_title + '</li>')
-          .append('<li>' + movieDbArray[i].overview + '</li>')
-          .append('<li>' + movieDbArray[i].popularity + '</li>')
-          .append('<li>' + movieDbArray[i].release_date + '</li>')
-          .append('<li>' + movieDbArray[i].vote_average + '</li>')
-          .append('<li>' + movieDbArray[i].vote_count + '</li>')
+            .append('<img src="http://image.tmdb.org/t/p/w185//' + movieDbArray[i].poster_path + '">');
+            var list = $('<ul>');
+            list.append('<li>' + movieDbArray[i].original_title + '</li>')
+            .append('<li>' + movieDbArray[i].overview + '</li>')
+            .append('<li>' + movieDbArray[i].popularity + '</li>')
+            .append('<li>' + movieDbArray[i].release_date + '</li>')
+            .append('<li>' + movieDbArray[i].vote_average + '</li>')
+            .append('<li>' + movieDbArray[i].vote_count + '</li>')
 
-          $('#results').append(list)
-          app.searchUtelly(i);
+            $('#results').append(list)
+            app.searchUtelly(i);
         },
 
         
