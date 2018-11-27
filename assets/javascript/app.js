@@ -25,8 +25,7 @@ var app = {
                     var movieList = response.results[i].original_title;
                     var movieReleaseDate = response.results[i].release_date;
 
-                    movieTitleRelease.push(movieList);
-                    movieTitleRelease.push(movieReleaseDate);
+                    
                     console.log(movieList);
                     console.log(movieReleaseDate);
                     app.drawBoxes(response);
@@ -61,8 +60,16 @@ var app = {
           .append('<li>' + movieDbArray[i].vote_average + '</li>')
           .append('<li>' + movieDbArray[i].vote_count + '</li>')
 
-          $('#results').append(list)
-          app.searchUtelly(i);
+          $('#results').append(list);
+          movieTitleRelease.push(movieDbArray[i].original_title);
+          movieTitleRelease.push(movieDbArray[i].release_date);
+
+          $.each(list, function(utellySearch){
+
+
+          app.searchUtelly(utellySearch);
+          });
+          
         },
 
         
@@ -84,9 +91,12 @@ var app = {
                     }).then(function(response) {
                       
                             var result = response.results;
+
+                            
                             
                             
                             console.log(result);
+
 
                             $.each(result, function(index) {
 
