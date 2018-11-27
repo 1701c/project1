@@ -52,8 +52,23 @@ body {
     color: #000;
 }
 
-.thumbNail {
+.modal-card-foot, .modal-card-head {
+    background-color: #3c4146;
+    padding: 6px;
+}
 
+.modal-card-title {
+    color: #fff;
+}
+
+.button.is-success {
+    background-color: #ffa500;
+    color: #000;
+}
+
+.modal-card-body {
+    -webkit-overflow-scrolling: touch;
+    background-color: gray;
 }
 
 #trendingBtn {
