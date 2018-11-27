@@ -24,19 +24,19 @@
       </div>
     </div>
   </section>
-  <!-- <div class="container is-fluid">
-    <section class="section">
-      <div class="container">
-        <h1 class="subtitle">What's Treading?</h1>
-        <div id="trending-section"></div>
-      </div>
-    </section> -->
-  <br>
-  <div class="columns is-mobile is-centered">
+  <div class="columns is-mobile is-centered is grouped">
     <div class="column is-two-thirds">
-      <h2>What do you want to watch?</h2>
-      <input class="input" type="text" id="searchText" placeholder="Text input">
-
+      <h2>What on?</h2>
+      <div class="field is-grouped">
+        <p class="control is-expanded">
+          <input class="input" type="text" id="searchText" placeholder="search content">
+        </p>
+        <p class="control">
+          <a class="button is-info" id="submitBtn">
+            Search
+          </a>
+        </p>
+      </div>
       <label class="checkbox">
         <input type="checkbox">
         Movies
@@ -45,14 +45,13 @@
         <input type="checkbox">
         TV Shows
       </label>
-
-      <div class="control">
-        <button class="button" id="submitBtn">GO!</button>
+      <div class="columns is-mobile is-centered">
+        <a class="button is-small" id="trendingBtn">Trending</a>
+        <a class="button is-small" id="watchListBtn">Watch List</a>
       </div>
     </div>
   </div>
-  </div>
-  <div id="results"></div>
+  <div id="results">
   </div>
 </body>
 
