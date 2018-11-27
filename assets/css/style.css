@@ -6,7 +6,6 @@ html{
 body {
     background-color: #3c4146;
     color: #fff;
-   
 }
 
 .hero-body {
@@ -53,16 +52,16 @@ body {
     color: #000;
 }
 
-img {
-    max-width: 25%;
+.thumbNail {
+
 }
 
 #trendingBtn {
-    margin:5%
+    margin:5%;
 }
 
 #watchListBtn {
-    margin:5%
+    margin:5%;
 }
 
 h1 {
