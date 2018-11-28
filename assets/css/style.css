@@ -66,6 +66,7 @@ body {
 .thumbNail {
     display: inline-block;
     margin: 10px;
+}
 
 .modal-card-foot, .modal-card-head {
     background-color: #3c4146;
