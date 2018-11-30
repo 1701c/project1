@@ -8,6 +8,17 @@ body {
     color: #fff;
 }
 
+.card {
+    background-color: transparent;
+    color: #fff;
+    padding: 0px;
+    /* width: 185px; */
+}
+
+.card-content {
+    padding: 0px 5px;
+}
+
 .hero-body {
     background-image: linear-gradient(to bottom, #050505, #e2e2e286);
     border-bottom: #000 solid 2px;
@@ -53,7 +64,27 @@ body {
 }
 
 .thumbNail {
+    display: inline-block;
+    margin: 10px;
+}
 
+.modal-card-foot, .modal-card-head {
+    background-color: #3c4146;
+    padding: 6px;
+}
+
+.modal-card-title {
+    color: #fff;
+}
+
+.button.is-success {
+    background-color: #ffa500;
+    color: #000;
+}
+
+.modal-card-body {
+    -webkit-overflow-scrolling: touch;
+    background-color: gray;
 }
 
 #trendingBtn {
@@ -76,6 +107,21 @@ h2 {
     font-size: 15px;
 }
 
+#results {
+    max-width: 900px;
+    margin: auto;
+}
+
 #icons {
     -webkit-filter: invert(100%);filter: invert(100%); 
+}
+
+@media (max-width: 667px) {
+    p {
+        font-size: 12px;
+    }
+    
+    .posterImg {
+        width: 150px;
+    }
 }
