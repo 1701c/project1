@@ -9,18 +9,11 @@ var config = {
 };
 firebase.initializeApp(config);
 
-var database = firebase.database();
-
-// test code to verify database functionality
-
-database.ref().set({
-    LastQuery: "Test",
-    User: "Major Tom"
-});
-
+var databaseRef = firebase.database().ref();
 
 var movieTitleRelease = [];
 var movieDbArray = [];
+var dataIndex = 0;
 
 var app = {
     searchMovieDB: function (searchText, isTV) {
@@ -147,6 +140,11 @@ var app = {
                 });
             });
         });
+    },
+
+    addToWatchList: function (i) {
+        console.log(movieDbArray[i].id);
+        databaseRef.push(movieDbArray[i]);
     }
 }
 
@@ -158,11 +156,15 @@ $(document).ready(function () {
     });
     $(document).on('click', '.thumbNail', function () {
         console.log('click');
-        app.movieSummary($(this).attr('dataIndex'))
-        // app.searchUtelly($(this).attr('mName'),$(this).attr('mYame'));
+        dataIndex = $(this).attr('dataIndex')
+        app.movieSummary(dataIndex)
     });
     $(document).on('click', '.modalClose', function () {
         console.log('click');
         $('.modal').attr('class','modal')
     });
+    $(document).on('click', '.addToWatchList', function() {
+        console.log('click');
+        app.addToWatchList(dataIndex);
+    })
 });
