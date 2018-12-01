@@ -9,8 +9,7 @@ var config = {
 };
 firebase.initializeApp(config);
 
-var databaseRef = firebase.database().ref();
-
+var databaseRef = firebase.database().ref('appdata');
 var movieTitleRelease = [];
 var movieDbArray = [];
 var dataIndex = 0;
@@ -82,9 +81,7 @@ var app = {
         app.searchUtelly(i);
     },
 
-
     searchUtelly: function (i) {
-
         var uMovie = movieDbArray[i].original_title.replace(/\s/g, "+");
         var utellyurl = "https://utelly-tv-shows-and-movies-availability-v1.p.mashape.com/lookup?country=us&term=" + uMovie;
         console.log(uMovie);
@@ -97,21 +94,12 @@ var app = {
                 "X-Mashape-Key": "ETvaxKZbFhmshL3jAAZP4Ylhx0iYp1v9LNHjsnY3CSBvSlVwgt"
             }
         }).then(function (response) {
-
             var result = response.results;
-
-
             console.log(result);
-
             $.each(result, function (index) {
-
-
                 for (var j = 0; j < movieTitleRelease.length; j++) {
-
                     // console.log("moviename" + result[index].name);
-
                     if (movieTitleRelease[j].toLowerCase() === result[index].name.toLowerCase()) {
-
                         var title = result[index].name;
                         console.log(title);
                         var topicImage = result[index].picture;
@@ -135,18 +123,32 @@ var app = {
 
 
                     $('#results').append(streamingUrl);
-
-
                 });
             });
         });
     },
 
+    addUserToDatabase: function (user) {
+        console.log(user.uid);
+
+        var userInfo = {}
+        userInfo.email = user.email;
+        userInfo.displayName = user.displayName;
+        userInfo.uid = user.uid;
+        userInfo.favorites = {default: 0};
+        databaseRef.child(user.uid).set(userInfo);
+        app.currentUser = user.uid;
+    },
+
     addToWatchList: function (i) {
         console.log(movieDbArray[i].id);
-        databaseRef.push(movieDbArray[i]);
-    }
+        databaseRef.child(app.currentUser).child('favorites').push(movieDbArray[i]);
+    },
+
+    currentUser: 'default'
 }
+
+
 
 $(document).ready(function () {
     console.log('init');
@@ -168,3 +170,22 @@ $(document).ready(function () {
         app.addToWatchList(dataIndex);
     })
 });
+
+
+
+function login() {
+    function newLoginHappened(user) {
+        if (user) {
+            // User is signed in
+            app.addUserToDatabase(user);
+            //databaseRef('users').child(user);
+        } else {
+            var provider = new firebase.auth.GoogleAuthProvider();
+            firebase.auth().signInWithRedirect(provider);
+        }
+    }
+
+    firebase.auth().onAuthStateChanged(newLoginHappened);
+}
+
+window.onload = login;
