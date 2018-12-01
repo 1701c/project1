@@ -11,6 +11,7 @@ firebase.initializeApp(config);
 
 var databaseRef = firebase.database().ref('appdata');
 var movieTitleRelease = [];
+var uSearch = [];
 var movieDbArray = [];
 var dataIndex = 0;
 var movieDbKey = '8db22003a978a1dbb48400e1d0ef0fa7';
@@ -78,9 +79,9 @@ var app = {
             poster.append('<img src="http://image.tmdb.org/t/p/w185//' + movieDbArray[i].poster_path + '">')
                 .addClass('posterImg')
             if (movieDbArray[i].hasOwnProperty('original_name')) {
-                content.append('<p>' + movieDbArray[i].original_name + ' (' + movieDbArray[i].first_air_date.substring(0, 4) + ')</p>')
+                content.append('<p>' + movieDbArray[i].original_name)
             } else {
-                content.append('<p>' + movieDbArray[i].original_title + ' (' + movieDbArray[i].release_date.substring(0, 4) + ')</p>')
+                content.append('<p>' + movieDbArray[i].original_title)
             }
             card.attr('dataIndex', i)
                 .append(poster)
@@ -94,9 +95,9 @@ var app = {
         $('.modal').addClass('is-active')
         $('.modal-card-title').empty()
         if (movieDbArray[i].hasOwnProperty('original_name')) {
-            $('.modal-card-title').append(movieDbArray[i].original_name + ' (' + movieDbArray[i].first_air_date.substring(0, 4) + ')')
+            $('.modal-card-title').append(movieDbArray[i].original_name)
         } else {
-            $('.modal-card-title').append(movieDbArray[i].original_title + ' (' + movieDbArray[i].release_date.substring(0, 4) + ')')
+            $('.modal-card-title').append(movieDbArray[i].original_title)
         }
         $('#modalResults').empty()
             .append('<img src="http://image.tmdb.org/t/p/w185//' + movieDbArray[i].poster_path + '">');
@@ -107,47 +108,65 @@ var app = {
             .append('<li>Vote Average: ' + movieDbArray[i].vote_average + '</li>')
             .append('<li>Vote Count: ' + movieDbArray[i].vote_count + '</li>')
         $('#modalResults').append(list)
+        uSearch.push($('.modal-card-title').text());
         app.searchUtelly(i);
     },
 
-    searchUtelly: function (i) {
-        var uMovie = movieDbArray[i].original_title.replace(/\s/g, "+");
+    searchUtelly: function () {
+
+        var uMovie = uSearch;
+        uSearch.length =1;
         var utellyurl = "https://utelly-tv-shows-and-movies-availability-v1.p.mashape.com/lookup?country=us&term=" + uMovie;
         console.log(uMovie);
 
         $.ajax({
-            url: utellyurl,
-            method: "GET",
-            dataType: "json",
-            headers: {
-                "X-Mashape-Key": "ETvaxKZbFhmshL3jAAZP4Ylhx0iYp1v9LNHjsnY3CSBvSlVwgt"
-            }
-        }).then(function (response) {
-            var result = response.results;
-            console.log(result);
-            $.each(result, function (index) {
-                for (var j = 0; j < movieTitleRelease.length; j++) {
-                    // console.log("moviename" + result[index].name);
-                    if (movieTitleRelease[j].toLowerCase() === result[index].name.toLowerCase()) {
-                        var title = result[index].name;
-                        console.log(title);
-                        var topicImage = result[index].picture;
-                        console.log(topicImage);
-                        var streaming = result[index].locations;
-                        var releaseYear = movieTitleRelease[j + 1];
-                        console.log(releaseYear);
-                    }
-                };
+                url: utellyurl,
+                method: "GET",
+                dataType: "json",
+                headers: {
+                    "X-Mashape-Key": "ETvaxKZbFhmshL3jAAZP4Ylhx0iYp1v9LNHjsnY3CSBvSlVwgt"
+                }
+            }).then(function(response) {
+              
+                    var result = response.results;
 
-                $.each(streaming, function (index) {
-                    var streamingText = $("<p>").text("Streaming Platform:");
-                    $('#results').append(streamingText);
-                    var icon = $("<img>");
-                    icon.attr("src", streaming[index].icon, " ");
-                    $('#results').append(icon);
-                    var streamingUrl = $("<p>").text("Watch");
-                    streamingUrl.attr("href", streaming[index].url, " ");
-                    $('#results').append(streamingUrl);
+                    
+                    
+                    
+                    console.log(result);
+
+
+                    $.each(result, function(index) {
+
+
+
+                        
+                          
+                          // console.log("moviename" + result[index].name);
+                      
+                           if (uSearch == result[index].name){
+
+                            var title = result[index].name;
+                            console.log(title);
+                             var topicImage = result[index].picture;
+                            console.log(topicImage);
+                            var streaming = result[index].locations;
+                             
+                           }
+                          
+
+                          $.each(streaming, function (index) {
+                            var streamingText = $("<p>").text("Streaming Platform:");
+                            $('#modalResults').append(streamingText);
+
+                            var icon = $("<img>");
+                            icon.attr("id", "icons");
+                            icon.attr("src", streaming[index].icon ," ");
+                            $('#modalResults').append(icon);
+
+                            streamingUrl= $("<a>");
+                            streamingUrl.attr("href", streaming[index].url, " ");
+                            $(icon).wrap(streamingUrl);
                 });
             });
         });
@@ -222,6 +241,7 @@ $(document).ready(function () {
     });
     $(document).on('click', '.thumbNail', function () {
         console.log('click');
+        uSearch = [];
         dataIndex = $(this).attr('dataIndex')
         app.movieSummary(dataIndex)
     });
