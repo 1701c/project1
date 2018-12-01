@@ -1,3 +1,5 @@
+//This is what was running from hosted github.io when I think I broke the master branch :0
+
 // Initialize Firebase
 var config = {
     apiKey: "AIzaSyAOPqOfuiDFoo_BVc7nHtcB7x0DbDtIGUc",
@@ -9,16 +11,30 @@ var config = {
 };
 firebase.initializeApp(config);
 
+
 var databaseRef = firebase.database().ref('appdata');
 var movieTitleRelease = [];
 var movieDbArray = [];
 var dataIndex = 0;
+
+var database = firebase.database();
+
+// test code to verify database functionality
+
+database.ref().set({
+    LastQuery: "Test",
+    User: "Major Tom"
+});
+
+var movieTitleRelease = [];
+var movieDbArray = [];
 var movieDbKey = '8db22003a978a1dbb48400e1d0ef0fa7';
+ 
 
 var app = {
     trendingMovieDB: function () {
         $.ajax({
-            url: 'https://api.themoviedb.org/3/trending/all/day?api_key=' + movieDbKey,
+            url: 'https://api.themoviedb.org/3/trending/all/day?api_key='+ movieDbKey,
             method: 'GET'
         }).then(function (response) {
             movieDbArray = response.results;
@@ -43,7 +59,8 @@ var app = {
         if ($('#tv').is(':checked')) {
             type = 'tv';
             isTV = true;
-        } else {
+        }
+        else {
             isTV = false;
         }
         $.ajax({
@@ -142,11 +159,15 @@ var app = {
                 $.each(streaming, function (index) {
                     var streamingText = $("<p>").text("Streaming Platform:");
                     $('#results').append(streamingText);
+
                     var icon = $("<img>");
                     icon.attr("src", streaming[index].icon, " ");
                     $('#results').append(icon);
+
                     var streamingUrl = $("<p>").text("Watch");
                     streamingUrl.attr("href", streaming[index].url, " ");
+
+
                     $('#results').append(streamingUrl);
                 });
             });
@@ -156,59 +177,28 @@ var app = {
     // adds user to database by uid for tracking/storing 
     addUserToDatabase: function (user) {
         console.log(user.uid);
-
-        if (this.userIsNew) {
-            var userInfo = {}
-            userInfo.email = user.email;
-            userInfo.displayName = user.displayName;
-            userInfo.uid = user.uid;
-            userInfo.favorites = {};
-            databaseRef.child(user.uid).push(userInfo);
-        }
+    
+        var userInfo = {}
+        userInfo.email = user.email;
+        userInfo.displayName = user.displayName;
+        userInfo.uid = user.uid;
+        userInfo.favorites = {default: 0};
+        databaseRef.child(user.uid).push(userInfo);
         app.currentUser = user.uid;
-    },
-
-    // updates favorites
-    updateFavorites: function (received) {
-        var data = received.val();
-        console.log(data);
-        for (key in data) {
-            var arr = data[key];
-            console.log(arr);
-            if (arr.iud == app.currentUser.uid) {
-                app.favorites = arr.favorites;
-            }
-        }
     },
 
     // pushes the movie info JSON to an array "favorites" attached to uid
     addToWatchList: function (i) {
         // console.log(movieDbArray[i].id);
-        console.log(i);
-        if (app.currentUser == "") {
-            login();
-        } else {
-            console.log(databaseRef.child(app.currentUser));
-            databaseRef.child(app.currentUser).child('favorites').push(movieDbArray[i]);
-        }
+        databaseRef.child(app.currentUser.uid).child('favorites').push(movieDbArray[i]);
     },
     // current user has uid for storing user specific lists of favorites
-    currentUser: "",
-
-    favorites: [],
+    currentUser: 'default',
 
     // Draw favorites
-    drawFavorites: function (array) {
-       movieDbArray = Object.values(app.favorites)
-       this.drawBoxes();
-    },
-
-    userIsNew: function (uid) {
-        console.log(uid);
-        if (databaseRef.hasOwnProperty(uid)){
-            return false;
-        }
-        return true;
+    drawFavorites: function(favorites) {
+        // takes in array of favorites and displays results
+        // probably reuse drawBoxes somehow?
     }
 }
 
@@ -227,37 +217,29 @@ $(document).ready(function () {
     });
     $(document).on('click', '.modalClose', function () {
         console.log('click');
-        $('.modal').attr('class', 'modal')
+        $('.modal').attr('class','modal')
     });
-    $(document).on('click', '.addToWatchList', function () {
+
+    $(document).on('click', '.addToWatchList', function() {
         console.log('click');
         app.addToWatchList(dataIndex);
     })
-    $(document).on('click', '#watchListBtn', function () {
-        //app.favorites = databaseRef.child(app.currentUser.uid).favorites;
-        app.drawFavorites(app.favorites);
-    });
+
     $(document).on('click', '#trendingBtn', function () {
         console.log('click');
         app.trendingMovieDB();
     });
 
-    databaseRef.on("value", app.updateFavorites);
 });
 
 
-// This needs to be scoped globally
+// This needs to be scoped globally for reasons that are above my paygrade
 function login() {
     function newLoginHappened(user) {
-        // User is signed in
         if (user) {
-            // Check for new User
-            if (app.userIsNew(user.uid)) {
-                app.addUserToDatabase(user);
-            } else {
-                app.currentUser = user.uid;
-            }
-            // If no signed in user authenticate
+            // User is signed in
+            app.addUserToDatabase(user);
+            //databaseRef('users').child(user);
         } else {
             var provider = new firebase.auth.GoogleAuthProvider();
             firebase.auth().signInWithRedirect(provider);
