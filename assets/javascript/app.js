@@ -128,6 +128,7 @@ var app = {
         });
     },
 
+    // adds user to database by uid for tracking/storing 
     addUserToDatabase: function (user) {
         console.log(user.uid);
 
@@ -140,12 +141,19 @@ var app = {
         app.currentUser = user.uid;
     },
 
+    // pushes the movie info JSON to an array "favorites" attached to uid
     addToWatchList: function (i) {
-        console.log(movieDbArray[i].id);
+        // console.log(movieDbArray[i].id);
         databaseRef.child(app.currentUser).child('favorites').push(movieDbArray[i]);
     },
+    // current user has uid for storing user specific lists of favorites
+    currentUser: 'default',
 
-    currentUser: 'default'
+    // Draw favorites
+    drawFavorites: function(favorites) {
+        // takes in array of favorites and displays results
+        // probably reuse drawBoxes somehow?
+    }
 }
 
 
@@ -172,7 +180,7 @@ $(document).ready(function () {
 });
 
 
-
+// This needs to be scoped globally for reasons that are above my paygrade
 function login() {
     function newLoginHappened(user) {
         if (user) {
@@ -184,8 +192,10 @@ function login() {
             firebase.auth().signInWithRedirect(provider);
         }
     }
-
     firebase.auth().onAuthStateChanged(newLoginHappened);
 }
 
+// This may or may not be necessary. It would probably be a better UI if the
+// user wasn't prompted to login until they actually wanted to save favorites
+// but for now this is what has it working
 window.onload = login;
