@@ -29,12 +29,9 @@ var app = {
             url: queryURL + type + '?api_key=' + key + '&query=' + searchText + additionalParams,
             method: 'GET'
         }).then(function (response) {
-
             var movieResults = response.results;
             console.log(movieResults);
-
             for (i = 0; i < response.results.length; i++) {
-
                 var movieList = response.results[i].original_title;
                 var movieReleaseDate = response.results[i].release_date;
 
@@ -113,15 +110,11 @@ var app = {
                 $.each(streaming, function (index) {
                     var streamingText = $("<p>").text("Streaming Platform:");
                     $('#results').append(streamingText);
-
                     var icon = $("<img>");
                     icon.attr("src", streaming[index].icon, " ");
                     $('#results').append(icon);
-
                     var streamingUrl = $("<p>").text("Watch");
                     streamingUrl.attr("href", streaming[index].url, " ");
-
-
                     $('#results').append(streamingUrl);
                 });
             });
@@ -136,8 +129,8 @@ var app = {
         userInfo.email = user.email;
         userInfo.displayName = user.displayName;
         userInfo.uid = user.uid;
-        userInfo.favorites = {default: 0};
-        databaseRef.child(user.uid).set(userInfo);
+        userInfo.favorites = {};
+        databaseRef.child(user.uid).push(userInfo);
         app.currentUser = userInfo;
     },
 
@@ -145,24 +138,27 @@ var app = {
     updateFavorites: function (received) {
         var data = received.val();
         console.log(data);
-        for(key in data) {
+        for (key in data) {
             var arr = data[key];
             console.log(arr);
+            if (arr.iud == app.currentUser.uid) {
+                app.favorites = arr.favorites;
+            }
         }
     },
 
     // pushes the movie info JSON to an array "favorites" attached to uid
     addToWatchList: function (i) {
         // console.log(movieDbArray[i].id);
-       // databaseRef.child(app.currentUser).child('favorites').push(movieDbArray[i]);
+        // databaseRef.child(app.currentUser).child('favorites').push(movieDbArray[i]);
     },
     // current user has uid for storing user specific lists of favorites
-    currentUser: {default: 0},
+    currentUser: {},
 
     favorites: [],
 
     // Draw favorites
-    drawFavorites: function(array) {
+    drawFavorites: function (array) {
         $('#results').empty()
         for (i = 0; i < array.length; i++) {
             var card = $('<div class="thumbNail card">')
@@ -175,8 +171,18 @@ var app = {
                 .append(poster)
                 .append(content)
             $("#results").append(card);
+        }
+    },
+
+    userIsNew: function (uid) {
+        for (key in databaseRef) {
+            if (key == uid) {
+                console.log(key);
+                return false;
+            }
+        }
+        return true;
     }
-}
 }
 
 
@@ -194,13 +200,13 @@ $(document).ready(function () {
     });
     $(document).on('click', '.modalClose', function () {
         console.log('click');
-        $('.modal').attr('class','modal')
+        $('.modal').attr('class', 'modal')
     });
-    $(document).on('click', '.addToWatchList', function() {
+    $(document).on('click', '.addToWatchList', function () {
         console.log('click');
         app.addToWatchList(dataIndex);
     })
-    $(document).on('click', '#watchListBtn', function() {
+    $(document).on('click', '#watchListBtn', function () {
         app.favorites = databaseRef.child(app.currentUser.uid).favorites;
         app.drawFavorites(app.favorites);
     });
@@ -212,9 +218,14 @@ $(document).ready(function () {
 // This needs to be scoped globally for reasons that are above my paygrade
 function login() {
     function newLoginHappened(user) {
+        // User is signed in
         if (user) {
-            // User is signed in
-            app.addUserToDatabase(user);
+            // Check for new User
+            if (app.userIsNew(user.uid)) {
+                app.addUserToDatabase(user);
+            } else {
+                app.currentUser = user.uid;
+            }
             //databaseRef('users').child(user);
         } else {
             var provider = new firebase.auth.GoogleAuthProvider();
