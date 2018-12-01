@@ -37,14 +37,11 @@
           </a>
         </p>
       </div>
-      <label class="checkbox">
-        <input type="checkbox">
-        Movies
-      </label>
-      <label class="checkbox">
-        <input type="checkbox">
-        TV Shows
-      </label>
+      <input type="radio" id="movies" name="drone" value="movies" checked>
+      <label for="movies">Movies</label>
+      <input type="radio" id="tv" name="drone" value="tv">
+    <label for="tv">TV</label>
+
       <div class="columns is-mobile is-centered">
         <a class="button is-small" id="trendingBtn">Trending</a>
         <a class="button is-small" id="watchListBtn">Watch List</a>
@@ -67,7 +64,11 @@
       </section>
       <footer class="modal-card-foot">
         <button class="button modalClose">Back</button>
+
         <button class="button addToWatchList">Add To Watch List</button>
+
+        <button class="button" id="favorite">Favorite</button>
+
       </footer>
     </div>
   </div>
