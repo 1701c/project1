@@ -9,12 +9,6 @@ var config = {
 };
 firebase.initializeApp(config);
 
-
-var databaseRef = firebase.database().ref('appdata');
-var movieTitleRelease = [];
-var movieDbArray = [];
-var dataIndex = 0;
-
 var database = firebase.database();
 
 // test code to verify database functionality
@@ -27,7 +21,6 @@ database.ref().set({
 var movieTitleRelease = [];
 var movieDbArray = [];
 var movieDbKey = '8db22003a978a1dbb48400e1d0ef0fa7';
- 
 
 var app = {
     trendingMovieDB: function () {
@@ -138,12 +131,21 @@ var app = {
                 "X-Mashape-Key": "ETvaxKZbFhmshL3jAAZP4Ylhx0iYp1v9LNHjsnY3CSBvSlVwgt"
             }
         }).then(function (response) {
+
             var result = response.results;
+
+
             console.log(result);
+
             $.each(result, function (index) {
+
+
                 for (var j = 0; j < movieTitleRelease.length; j++) {
+
                     // console.log("moviename" + result[index].name);
+
                     if (movieTitleRelease[j].toLowerCase() === result[index].name.toLowerCase()) {
+
                         var title = result[index].name;
                         console.log(title);
                         var topicImage = result[index].picture;
@@ -167,40 +169,13 @@ var app = {
 
 
                     $('#results').append(streamingUrl);
+
+
                 });
             });
         });
-    },
-
-    // adds user to database by uid for tracking/storing 
-    addUserToDatabase: function (user) {
-        console.log(user.uid);
-
-        var userInfo = {}
-        userInfo.email = user.email;
-        userInfo.displayName = user.displayName;
-        userInfo.uid = user.uid;
-        userInfo.favorites = {default: 0};
-        databaseRef.child(user.uid).set(userInfo);
-        app.currentUser = user.uid;
-    },
-
-    // pushes the movie info JSON to an array "favorites" attached to uid
-    addToWatchList: function (i) {
-        // console.log(movieDbArray[i].id);
-        databaseRef.child(app.currentUser).child('favorites').push(movieDbArray[i]);
-    },
-    // current user has uid for storing user specific lists of favorites
-    currentUser: 'default',
-
-    // Draw favorites
-    drawFavorites: function(favorites) {
-        // takes in array of favorites and displays results
-        // probably reuse drawBoxes somehow?
     }
 }
-
-
 
 $(document).ready(function () {
     console.log('init');
@@ -210,43 +185,15 @@ $(document).ready(function () {
     });
     $(document).on('click', '.thumbNail', function () {
         console.log('click');
-        dataIndex = $(this).attr('dataIndex')
-        app.movieSummary(dataIndex)
+        app.movieSummary($(this).attr('dataIndex'))
+        // app.searchUtelly($(this).attr('mName'),$(this).attr('mYame'));
     });
     $(document).on('click', '.modalClose', function () {
         console.log('click');
         $('.modal').attr('class','modal')
     });
-
-    $(document).on('click', '.addToWatchList', function() {
-        console.log('click');
-        app.addToWatchList(dataIndex);
-    })
-
     $(document).on('click', '#trendingBtn', function () {
         console.log('click');
         app.trendingMovieDB();
     });
-
 });
-
-
-// This needs to be scoped globally for reasons that are above my paygrade
-function login() {
-    function newLoginHappened(user) {
-        if (user) {
-            // User is signed in
-            app.addUserToDatabase(user);
-            //databaseRef('users').child(user);
-        } else {
-            var provider = new firebase.auth.GoogleAuthProvider();
-            firebase.auth().signInWithRedirect(provider);
-        }
-    }
-    firebase.auth().onAuthStateChanged(newLoginHappened);
-}
-
-// This may or may not be necessary. It would probably be a better UI if the
-// user wasn't prompted to login until they actually wanted to save favorites
-// but for now this is what has it working
-window.onload = login;
