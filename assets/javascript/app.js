@@ -229,7 +229,7 @@ $(document).ready(function () {
 
     $(document).on('click', '.addToWatchList', function () {
        app.addToWatchList(dataIndex);
-    });
+    })
 
     $(document).on('click', '#watchListBtn', function () {
         app.drawFavorites(app.favorites);
