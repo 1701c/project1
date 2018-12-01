@@ -23,7 +23,7 @@ var app = {
             method: 'GET'
         }).then(function (response) {
             movieDbArray = response.results;
-            console.log(movieDbArray);
+    
             for (i = 0; i < movieDbArray.length; i++) {
                 if (movieDbArray[i].hasOwnProperty('original_name')) {
                     movieTitleRelease.push(movieDbArray[i].original_name);
@@ -52,18 +52,14 @@ var app = {
             method: 'GET'
         }).then(function (response) {
             movieDbArray = response.results;
-            console.log(movieDbArray);
+            
             for (i = 0; i < movieDbArray.length; i++) {
                 if (movieDbArray[i].hasOwnProperty('original_name')) {
-                    console.log('TV');
                     movieTitleRelease.push(movieDbArray[i].original_name);
                     movieTitleRelease.push(movieDbArray[i].first_air_date);
                 } else {
-                    console.log('Movie');
                     movieTitleRelease.push(movieDbArray[i].original_title);
-                    movieTitleRelease.push(movieDbArray[i].release_date);
-                    console.log(movieDbArray[i].original_title);
-                    console.log(movieDbArray[i].release_date);
+                    movieTitleRelease.push(movieDbArray[i].release_date); 
                 }
                 app.drawBoxes();
             }
@@ -78,6 +74,7 @@ var app = {
             var content = $('<div class="card-content">')
             poster.append('<img src="http://image.tmdb.org/t/p/w185//' + movieDbArray[i].poster_path + '">')
                 .addClass('posterImg')
+
             if (movieDbArray[i].hasOwnProperty('original_name')) {
                 content.append('<p>' + movieDbArray[i].original_name)
             } else {
@@ -91,9 +88,10 @@ var app = {
     },
 
     movieSummary: function (i) {
-        console.log('modal results');
+
         $('.modal').addClass('is-active')
         $('.modal-card-title').empty()
+
         if (movieDbArray[i].hasOwnProperty('original_name')) {
             $('.modal-card-title').append(movieDbArray[i].original_name)
         } else {
@@ -117,7 +115,7 @@ var app = {
         var uMovie = uSearch;
         uSearch.length =1;
         var utellyurl = "https://utelly-tv-shows-and-movies-availability-v1.p.mashape.com/lookup?country=us&term=" + uMovie;
-        console.log(uMovie);
+        
 
         $.ajax({
                 url: utellyurl,
@@ -130,43 +128,25 @@ var app = {
               
                     var result = response.results;
 
-                    
-                    
-                    
-                    console.log(result);
-
-
-                    $.each(result, function(index) {
-
-
-
+                $.each(result, function(index) {
                         
-                          
-                          // console.log("moviename" + result[index].name);
-                      
-                           if (uSearch == result[index].name){
-
-                            var title = result[index].name;
-                            console.log(title);
-                             var topicImage = result[index].picture;
-                            console.log(topicImage);
+                    if (uSearch == result[index].name){
                             var streaming = result[index].locations;
-                             
-                           }
+                        }
                           
+                $.each(streaming, function (index) {
 
-                          $.each(streaming, function (index) {
-                            var streamingText = $("<p>").text("Streaming Platform:");
-                            $('#modalResults').append(streamingText);
+                    var streamingText = $("<p>").text("Streaming Platform:");
+                        $('#modalResults').append(streamingText);
 
-                            var icon = $("<img>");
-                            icon.attr("id", "icons");
-                            icon.attr("src", streaming[index].icon ," ");
-                            $('#modalResults').append(icon);
+                    var icon = $("<img>");
+                        icon.attr("id", "icons");
+                        icon.attr("src", streaming[index].icon ," ");
+                        $('#modalResults').append(icon);
 
-                            streamingUrl= $("<a>");
-                            streamingUrl.attr("href", streaming[index].url, " ");
-                            $(icon).wrap(streamingUrl);
+                        streamingUrl= $("<a>");
+                        streamingUrl.attr("href", streaming[index].url, " ");
+                        $(icon).wrap(streamingUrl);
                 });
             });
         });
@@ -174,8 +154,7 @@ var app = {
 
     // adds user to database by uid for tracking/storing 
     addUserToDatabase: function (user) {
-        console.log(user.uid);
-
+        
         if (this.userIsNew) {
             var userInfo = {}
             userInfo.email = user.email;
@@ -190,11 +169,12 @@ var app = {
     // updates favorites
     updateFavorites: function (received) {
         var data = received.val();
-        console.log(data);
+        
         for (key in data) {
             var arr = data[key];
-            console.log(arr);
-            if (arr.iud == app.currentUser.uid) {
+            
+            if (key == app.currentUser) {
+                
                 app.favorites = arr.favorites;
             }
         }
@@ -202,12 +182,11 @@ var app = {
 
     // pushes the movie info JSON to an array "favorites" attached to uid
     addToWatchList: function (i) {
-        // console.log(movieDbArray[i].id);
-        console.log(i);
+        
         if (app.currentUser == "") {
             login();
         } else {
-            console.log(databaseRef.child(app.currentUser));
+            
             databaseRef.child(app.currentUser).child('favorites').push(movieDbArray[i]);
         }
     },
@@ -223,7 +202,7 @@ var app = {
     },
 
     userIsNew: function (uid) {
-        console.log(uid);
+        
         if (databaseRef.hasOwnProperty(uid)){
             return false;
         }
@@ -231,35 +210,33 @@ var app = {
     }
 }
 
-
-
 $(document).ready(function () {
-    console.log('init');
+    
     $("#submitBtn").click(function (e) {
         e.preventDefault();
         app.searchMovieDB($("#searchText").val());
     });
+
     $(document).on('click', '.thumbNail', function () {
-        console.log('click');
         uSearch = [];
         dataIndex = $(this).attr('dataIndex')
         app.movieSummary(dataIndex)
     });
+
     $(document).on('click', '.modalClose', function () {
-        console.log('click');
         $('.modal').attr('class', 'modal')
     });
+
     $(document).on('click', '.addToWatchList', function () {
-        console.log('click');
-        app.addToWatchList(dataIndex);
-    })
+       app.addToWatchList(dataIndex);
+    });
+
     $(document).on('click', '#watchListBtn', function () {
-        //app.favorites = databaseRef.child(app.currentUser.uid).favorites;
         app.drawFavorites(app.favorites);
     });
+
     $(document).on('click', '#trendingBtn', function () {
-        console.log('click');
-        app.trendingMovieDB();
+       app.trendingMovieDB();
     });
 
     databaseRef.on("value", app.updateFavorites);
@@ -286,7 +263,5 @@ function login() {
     firebase.auth().onAuthStateChanged(newLoginHappened);
 }
 
-// This may or may not be necessary. It would probably be a better UI if the
-// user wasn't prompted to login until they actually wanted to save favorites
-// but for now this is what has it working
+
 window.onload = login;
