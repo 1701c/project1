@@ -138,22 +138,45 @@ var app = {
         userInfo.uid = user.uid;
         userInfo.favorites = {default: 0};
         databaseRef.child(user.uid).set(userInfo);
-        app.currentUser = user.uid;
+        app.currentUser = userInfo;
+    },
+
+    // updates favorites
+    updateFavorites: function (received) {
+        var data = received.val();
+        console.log(data);
+        for(key in data) {
+            var arr = data[key];
+            console.log(arr);
+        }
     },
 
     // pushes the movie info JSON to an array "favorites" attached to uid
     addToWatchList: function (i) {
         // console.log(movieDbArray[i].id);
-        databaseRef.child(app.currentUser).child('favorites').push(movieDbArray[i]);
+       // databaseRef.child(app.currentUser).child('favorites').push(movieDbArray[i]);
     },
     // current user has uid for storing user specific lists of favorites
-    currentUser: 'default',
+    currentUser: {default: 0},
+
+    favorites: [],
 
     // Draw favorites
-    drawFavorites: function(favorites) {
-        // takes in array of favorites and displays results
-        // probably reuse drawBoxes somehow?
+    drawFavorites: function(array) {
+        $('#results').empty()
+        for (i = 0; i < array.length; i++) {
+            var card = $('<div class="thumbNail card">')
+            var poster = $('<div class="card-image">')
+            var content = $('<div class="card-content">')
+            poster.append('<img src="http://image.tmdb.org/t/p/w185//' + response.results[i].poster_path + '">')
+                .addClass('posterImg')
+            content.append('<p>' + response.results[i].original_title + ' (' + response.results[i].release_date.substring(0, 4) + ')</p>');
+            card.attr('dataIndex', i)
+                .append(poster)
+                .append(content)
+            $("#results").append(card);
     }
+}
 }
 
 
@@ -177,6 +200,12 @@ $(document).ready(function () {
         console.log('click');
         app.addToWatchList(dataIndex);
     })
+    $(document).on('click', '#watchListBtn', function() {
+        app.favorites = databaseRef.child(app.currentUser.uid).favorites;
+        app.drawFavorites(app.favorites);
+    });
+
+    databaseRef.on("value", app.updateFavorites);
 });
 
 
