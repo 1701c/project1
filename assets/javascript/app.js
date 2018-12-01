@@ -9,63 +9,26 @@ var config = {
 };
 firebase.initializeApp(config);
 
-
 var databaseRef = firebase.database().ref('appdata');
 var movieTitleRelease = [];
 var movieDbArray = [];
 var dataIndex = 0;
 
-var database = firebase.database();
-
-// test code to verify database functionality
-
-database.ref().set({
-    LastQuery: "Test",
-    User: "Major Tom"
-});
-
-var movieTitleRelease = [];
-var movieDbArray = [];
-var movieDbKey = '8db22003a978a1dbb48400e1d0ef0fa7';
- 
-
 var app = {
-    trendingMovieDB: function () {
-        $.ajax({
-            url: 'https://api.themoviedb.org/3/trending/all/day?api_key='+ movieDbKey,
-            method: 'GET'
-        }).then(function (response) {
-            movieDbArray = response.results;
-            console.log(movieDbArray);
-            for (i = 0; i < movieDbArray.length; i++) {
-                if (movieDbArray[i].hasOwnProperty('original_name')) {
-                    movieTitleRelease.push(movieDbArray[i].original_name);
-                    movieTitleRelease.push(movieDbArray[i].first_air_date);
-                } else {
-                    movieTitleRelease.push(movieDbArray[i].original_title);
-                    movieTitleRelease.push(movieDbArray[i].release_date);
-                }
-                app.drawBoxes();
-            }
-        });
-    },
-
-    searchMovieDB: function (searchText) {
+    searchMovieDB: function (searchText, isTV) {
+        var key = '8db22003a978a1dbb48400e1d0ef0fa7';
         var queryURL = 'https://api.themoviedb.org/3/search/';
         var type = 'movie';
         var additionalParams = '&include_adult=false&language=en-US&page=1';
-        if ($('#tv').is(':checked')) {
+
+        if (isTV === true) {
             type = 'tv';
-            isTV = true;
-        }
-        else {
-            isTV = false;
+            // additionalParams = '';
         }
         $.ajax({
-            url: queryURL + type + '?api_key=' + movieDbKey + '&query=' + searchText + additionalParams,
+            url: queryURL + type + '?api_key=' + key + '&query=' + searchText + additionalParams,
             method: 'GET'
         }).then(function (response) {
-<<<<<<< HEAD
             var movieResults = response.results;
             console.log(movieResults);
             for (i = 0; i < response.results.length; i++) {
@@ -77,40 +40,20 @@ var app = {
                 console.log(movieList);
                 console.log(movieReleaseDate);
                 app.drawBoxes(response);
-=======
-            movieDbArray = response.results;
-            console.log(movieDbArray);
-            for (i = 0; i < movieDbArray.length; i++) {
-                if (movieDbArray[i].hasOwnProperty('original_name')) {
-                    console.log('TV');
-                    movieTitleRelease.push(movieDbArray[i].original_name);
-                    movieTitleRelease.push(movieDbArray[i].first_air_date);
-                } else {
-                    console.log('Movie');
-                    movieTitleRelease.push(movieDbArray[i].original_title);
-                    movieTitleRelease.push(movieDbArray[i].release_date);
-                    console.log(movieDbArray[i].original_title);
-                    console.log(movieDbArray[i].release_date);
-                }
-                app.drawBoxes();
->>>>>>> ff06307728d5807713242f54c12be754f913a13b
             }
         });
     },
 
-    drawBoxes: function () {
+    drawBoxes: function (response) {
+        movieDbArray = response.results;
         $('#results').empty()
-        for (i = 0; i < movieDbArray.length; i++) {
+        for (i = 0; i < response.results.length; i++) {
             var card = $('<div class="thumbNail card">')
             var poster = $('<div class="card-image">')
             var content = $('<div class="card-content">')
-            poster.append('<img src="http://image.tmdb.org/t/p/w185//' + movieDbArray[i].poster_path + '">')
+            poster.append('<img src="http://image.tmdb.org/t/p/w185//' + response.results[i].poster_path + '">')
                 .addClass('posterImg')
-            if (movieDbArray[i].hasOwnProperty('original_name')) {
-                content.append('<p>' + movieDbArray[i].original_name + ' (' + movieDbArray[i].first_air_date.substring(0, 4) + ')</p>')
-            } else {
-                content.append('<p>' + movieDbArray[i].original_title + ' (' + movieDbArray[i].release_date.substring(0, 4) + ')</p>')
-            }
+            content.append('<p>' + response.results[i].original_title + ' (' + response.results[i].release_date.substring(0, 4) + ')</p>');
             card.attr('dataIndex', i)
                 .append(poster)
                 .append(content)
@@ -122,11 +65,7 @@ var app = {
         console.log('modal results');
         $('.modal').addClass('is-active')
         $('.modal-card-title').empty()
-        if (movieDbArray[i].hasOwnProperty('original_name')) {
-            $('.modal-card-title').append(movieDbArray[i].original_name + ' (' + movieDbArray[i].first_air_date.substring(0, 4) + ')')
-        } else {
-            $('.modal-card-title').append(movieDbArray[i].original_title + ' (' + movieDbArray[i].release_date.substring(0, 4) + ')')
-        }
+            .append(movieDbArray[i].original_title + ' (' + movieDbArray[i].release_date.substring(0, 4) + ')');
         $('#modalResults').empty()
             .append('<img src="http://image.tmdb.org/t/p/w185//' + movieDbArray[i].poster_path + '">');
         var list = $('<ul>');
@@ -263,7 +202,6 @@ $(document).ready(function () {
         console.log('click');
         $('.modal').attr('class', 'modal')
     });
-<<<<<<< HEAD
     $(document).on('click', '.addToWatchList', function () {
         console.log('click');
         app.addToWatchList(dataIndex);
@@ -274,19 +212,6 @@ $(document).ready(function () {
     });
 
     databaseRef.on("value", app.updateFavorites);
-=======
-
-    $(document).on('click', '.addToWatchList', function() {
-        console.log('click');
-        app.addToWatchList(dataIndex);
-    })
-
-    $(document).on('click', '#trendingBtn', function () {
-        console.log('click');
-        app.trendingMovieDB();
-    });
-
->>>>>>> ff06307728d5807713242f54c12be754f913a13b
 });
 
 
