@@ -52,16 +52,20 @@ var app = {
             method: 'GET'
         }).then(function (response) {
             movieDbArray = response.results;
-            
-            for (i = 0; i < movieDbArray.length; i++) {
-                if (movieDbArray[i].hasOwnProperty('original_name')) {
-                    movieTitleRelease.push(movieDbArray[i].original_name);
-                    movieTitleRelease.push(movieDbArray[i].first_air_date);
-                } else {
-                    movieTitleRelease.push(movieDbArray[i].original_title);
-                    movieTitleRelease.push(movieDbArray[i].release_date); 
+            if (movieDbArray.length == 0) {
+                $('#results').empty()
+                $('#results').html('<p>No results found</p>')
+            } else {
+                for (i = 0; i < movieDbArray.length; i++) {
+                    if (movieDbArray[i].hasOwnProperty('original_name')) {
+                        movieTitleRelease.push(movieDbArray[i].original_name);
+                        movieTitleRelease.push(movieDbArray[i].first_air_date);
+                    } else {
+                        movieTitleRelease.push(movieDbArray[i].original_title);
+                        movieTitleRelease.push(movieDbArray[i].release_date); 
+                    }
+                    app.drawBoxes();
                 }
-                app.drawBoxes();
             }
         });
     },
@@ -74,7 +78,6 @@ var app = {
             var content = $('<div class="card-content">')
             poster.append('<img src="http://image.tmdb.org/t/p/w185//' + movieDbArray[i].poster_path + '">')
                 .addClass('posterImg')
-
             if (movieDbArray[i].hasOwnProperty('original_name')) {
                 content.append('<p>' + movieDbArray[i].original_name)
             } else {
@@ -215,6 +218,7 @@ $(document).ready(function () {
     $("#submitBtn").click(function (e) {
         e.preventDefault();
         app.searchMovieDB($("#searchText").val());
+        $('#searchText').val('');
     });
 
     $(document).on('click', '.thumbNail', function () {
